@@ -17,7 +17,7 @@ Another step that you need to do is to install `typescript-language-server` by r
 npm install -g typescript-language-server typescript
 ```
 
-You might have to prepend the command above with `sudo`` if you encounter a permission issue.
+You might have to prepend the command above with `sudo` if you encounter a permission issue.
 
 If you have any questions or feedback, please don't hesitate to reach out to Fron or Nitin. We're always here to help you get the most out of Socrates.
 
