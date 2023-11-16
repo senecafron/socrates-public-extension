@@ -6,10 +6,10 @@ To install the Socrates extension, follow these steps:
 
 1. Clone or download this repository.
 1. Open Visual Studio Code.
-1. Navigate to the Extensions view by clicking on the icon that looks like four blocks, with one block detached from the rest (I know, it makes so much sense as an icon).
+1. Navigate to the `Extensions view` by clicking on the icon that looks like four blocks, with one block detached from the rest
 1. Click on the three-dot icon located at the top right.
 1. Choose "Install from VSIX..."
-1. Locate the socrates-0.0.1.vsix file in the repository that you just cloned or downloaded.
+1. Locate the `socrates-0.0.1.vsix` file in the repository that you just cloned or downloaded.
 
 Another step that you need to do is to install `typescript-language-server` by running:
 
