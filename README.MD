@@ -19,6 +19,8 @@ npm install -g typescript-language-server typescript
 
 You might have to prepend the command above with `sudo` if you encounter a permission issue.
 
+TODO: Add instruction on how to activate Socrates once its insatlled
+
 If you have any questions or feedback, please don't hesitate to reach out to Fron or Nitin. We're always here to help you get the most out of Socrates.
 
 Happy navigating!
