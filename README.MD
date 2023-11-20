@@ -1,5 +1,4 @@
 # Welcome to the Socrates Extension!
-![Socrates Logo](https://i.ibb.co/1dKqpwg/Logo.png)
 <img src="https://i.ibb.co/1dKqpwg/Logo.png" alt="Socrates Logo" width="204" height="55">
 
 
