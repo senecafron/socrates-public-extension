@@ -1,6 +1,5 @@
-# Welcome to the Socrates Extension!
 <img src="https://i.ibb.co/1dKqpwg/Logo.png" alt="Socrates Logo" width="204" height="55">
-
+# Welcome to the Socrates Extension!
 
 We're thrilled to have you on board with the (soon to be)  world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
 
