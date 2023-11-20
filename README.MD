@@ -30,6 +30,7 @@ To use Socrates, follow these steps:
 1. Open any JavaScript (JS) file and place your cursor at any arbitrary function.
 1. Press `CTRL` + `SHIFT` + `S` to start navigating your code in Socrates, beginning at that arbitrary function.
 
-If you have any questions or feedback, please don't hesitate to reach out to Fron (twitter: @fronseneca) or Nithin. We're always here to help you get the most out of Socrates.
+If you have any questions or feedback, please don't hesitate to reach out to Fron (twitter: [@fronseneca](https://twitter.com/fronseneca)
+) or Nithin. We're always here to help you get the most out of Socrates.
 
 Happy navigating!
