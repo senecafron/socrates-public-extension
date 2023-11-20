@@ -1,6 +1,6 @@
 # Welcome to the Socrates Extension!
 
-We're thrilled to have you on board with the world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
+We're thrilled to have you on board with the (soon to be)  world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
 
 To install the Socrates extension, follow these steps:
 
@@ -19,8 +19,13 @@ npm install -g typescript-language-server typescript
 
 You might have to prepend the command above with `sudo` if you encounter a permission issue.
 
-TODO: Add instruction on how to activate Socrates once its insatlled
+Once you have Socrates installed in your VS Code, follow these steps:
 
-If you have any questions or feedback, please don't hesitate to reach out to Fron or Nitin. We're always here to help you get the most out of Socrates.
+1. Go to View > Command Palette (or, on Mac, press CMD + SHIFT + P).
+1. Search for "Build Socrates Index" and wait until the index is built. For the test run, the indexer works well on the socrates-demo-repo provided in this repository.
+1. Open any JavaScript (JS) file, place your cursor at any arbitrary function.
+1. Press CTRL + SHIFT + S to start navigating your code in Socrates, beginning at that arbitrary function.
+
+If you have any questions or feedback, please don't hesitate to reach out to Fron (twitter: @fronseneca) or Nithin. We're always here to help you get the most out of Socrates.
 
 Happy navigating!
