@@ -6,6 +6,8 @@
 
 We're thrilled to have you on board with the (soon to be)  world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
 
+No need to navigate dozens of files when you can see how every part of your code is interconnected, all on a single infinite canvas
+
 To install the Socrates extension, follow these steps:
 1. Make sure you have up to date Visual Studio Code
 1. Clone this repository
