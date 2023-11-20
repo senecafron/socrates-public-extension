@@ -22,7 +22,7 @@ You might have to prepend the command above with `sudo` if you encounter a permi
 Once you have Socrates installed in your VS Code, follow these steps:
 
 1. Go to View > Command Palette (or, on Mac, press CMD + SHIFT + P).
-1. Search for "Build Socrates Index" and wait until the index is built. For the test run, the indexer works well on the socrates-demo-repo provided in this repository.
+1. Search for `Build Socrates Index` and wait until the index is built. For the test run, the indexer works well on the socrates-demo-repo provided in this repository.
 1. Open any JavaScript (JS) file, place your cursor at any arbitrary function.
 1. Press CTRL + SHIFT + S to start navigating your code in Socrates, beginning at that arbitrary function.
 
