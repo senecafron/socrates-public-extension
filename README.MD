@@ -1,5 +1,8 @@
 # Welcome to the Socrates Extension!
 
+![GitHub Logo](/Logo.png)
+
+
 We're thrilled to have you on board with the (soon to be)  world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
 
 To install the Socrates extension, follow these steps:
