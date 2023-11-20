@@ -21,7 +21,7 @@ You might have to prepend the command above with `sudo` if you encounter a permi
 
 # Running Socrates on the demo project (`socrates-demo-repo` folder)
 
-Once you have Socrates installed in your VS Code, please be aware that the Socrates code indexer is still in the early stages of development. While it works well with the provided demo repository, it may still contain bugs and may not function correctly with arbitrary JavaScript (JS) or TypeScript (TS) code.
+Once you have Socrates installed in your VS Code, please be aware that the Socrates code indexer is still in the early stages of development. While it works well with the provided `socrates-demo-repo`, it may still contain bugs and may not function correctly with arbitrary JavaScript (JS) or TypeScript (TS) code.
 
 To use Socrates, follow these steps:
 
