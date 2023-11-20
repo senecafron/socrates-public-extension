@@ -32,7 +32,7 @@ Once you have Socrates installed in your VS Code, please be aware that the Socra
 To use Socrates, follow these steps:
 
 1. Go to View > Command Palette (or press `CMD` + `SHIFT` + `P` on Mac)
-1. Search for `Build Socrates` Index and wait until the index is built
+1. Search for `Build Socrates Index` and wait until the index is built
 1. Open any JavaScript (JS) file and place your cursor at any arbitrary function
 1. Press `CTRL` + `SHIFT` + `S` to start navigating your code in Socrates, beginning at that arbitrary function
 
