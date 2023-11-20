@@ -7,11 +7,11 @@
 We're thrilled to have you on board with the (soon to be)  world's best code navigator, Socrates. With Socrates, you'll be able to navigate your codebase with ease, visualizing how functions and variables are connected with one another on an infinite canvas, just like a map!
 
 To install the Socrates extension, follow these steps:
-
+1. Make sure you have up to date Visual Studio Code
 1. Clone or download this repository.
 1. Open Visual Studio Code.
 1. Navigate to the `Extensions view` by clicking on the icon that looks like four blocks, with one block detached from the rest
-1. Click on the three-dot icon located at the top right.
+1. Click on the three-dot icon located at the top right of the `Extension View`
 1. Choose "Install from VSIX..."
 1. Locate the `socrates-0.0.1.vsix` file in the repository that you just cloned or downloaded.
 
