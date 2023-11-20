@@ -1,4 +1,4 @@
-<img id="dark-mode-image" src="https://i.ibb.co/hVy16s8/Group-38.png" alt="Socrates Logo" width="228" height="69">
+<img id="dark-mode-image" src="https://i.ibb.co/1dKqpwg/Logo.png" alt="Socrates Logo" width="204" height="55">
 
 
 # Welcome to the Socrates Extension!
