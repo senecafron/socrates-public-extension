@@ -6,92 +6,6 @@ export const FUNCTION_REFERENCE_DIRECT_CONNECT = true;
 export let canvasOriginX = 0;
 export let canvasOriginY = 0;
 
-function shiftCanvasTowardsHtmlBox(htmlBox, anchor = { x: 300, y: 300 }) {
-  // we will shift the canvas so that the functionMetadataBox is at the anchor
-  // we will shift the canvas and change the scale to SCALE_TARGET
-  const SCALE_TARGET = 0.5;
-
-  let functionMetadataBoxPosition = getDocumentRelativePosition(
-    htmlBox.htmlElement()
-  );
-
-  // box canvas pixel
-  let bcpx = {
-    x: functionMetadataBoxPosition.left,
-    y: functionMetadataBoxPosition.top,
-  };
-
-  // canvas real pixel
-  let crpx = {
-    x: canvasTranslate().x,
-    y: canvasTranslate().y,
-  };
-
-  // box real pixel
-  let brpx = {
-    x: bcpx.x * SCALE_TARGET + crpx.x,
-    y: bcpx.y * SCALE_TARGET + crpx.y,
-  };
-
-  // real gap pixel
-  let rGapx = brpx.x - crpx.x;
-  let rGapy = brpx.y - crpx.y;
-
-  // new canvas real pixel
-  let nCrpx = { x: anchor.x - rGapx, y: anchor.y - rGapy };
-
-  const canvas = document.querySelector(".canvas");
-  canvas.style.transition = "transform 0.3s ease"; // Adjust duration and easing as needed
-  canvas.style.transform = `translate(${nCrpx.x}px, ${nCrpx.y}px) scale(${SCALE_TARGET})`;
-
-  // Add an event listener to remove the transition property after the animation is done
-  function removeTransition() {
-    canvas.style.transition = ""; // Remove the transition property
-    canvas.removeEventListener("transitionend", removeTransition); // Remove the event listener
-  }
-
-  // Add an event listener to detect the end of the transition
-  canvas.addEventListener("transitionend", removeTransition);
-}
-
-export function rootURL() {
-  return `http://localhost:${window.location.port}`;
-}
-
-export function canvasTranslate() {
-  let canvasElement = document.querySelector(".canvas");
-  var transformStyle = canvasElement.style.transform;
-  var match = transformStyle.match(/translate\(([^,]+),([^)]+)\)/);
-
-  if (match) {
-    var translateX = parseFloat(match[1]);
-    var translateY = parseFloat(match[2]);
-    return { x: translateX, y: translateY };
-  } else {
-    return { x: 0, y: 0 };
-  }
-}
-
-export function canvasScale() {
-  const canvasEl = document.querySelector(".canvas");
-
-  const styleAttribute = canvasEl.getAttribute("style");
-
-  if (!styleAttribute) {
-    console.error("styleAttribute is null");
-    return null;
-  }
-
-  const scaleMatch = styleAttribute.match(/scale\(([^)]+)\)/);
-
-  if (scaleMatch) {
-    return parseFloat(scaleMatch[1]);
-  } else {
-    console.error("scaleMatch is null");
-    return null;
-  }
-}
-
 export async function getFunctionBox(
   document,
   htmlBoxGraph,
@@ -192,6 +106,238 @@ export async function getFunctionBox(
     );
   } catch (error) {
     console.error("Error:", error);
+    return null;
+  }
+}
+
+// TODO: Clean the mess with the if statement bro wtf lol
+function constructSpanCoordinatesFromNodes(
+  type,
+  rawCodeText,
+  nodes,
+  variableDefinitionHashToStyle,
+  codeStartLocation
+) {
+  if (type == "variable-definition") {
+    nodes.sort((a, b) => {
+      if (
+        a.symbol.selectionRange.start.line < b.symbol.selectionRange.start.line
+      ) {
+        return -1;
+      } else if (
+        a.symbol.selectionRange.start.line > b.symbol.selectionRange.start.line
+      ) {
+        return 1;
+      } else {
+        if (
+          a.symbol.selectionRange.start.character <
+          b.symbol.selectionRange.start.character
+        ) {
+          return -1;
+        } else if (
+          a.symbol.selectionRange.start.character >
+          b.symbol.selectionRange.start.character
+        ) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
+  } else if (type == "function-reference" || type == "variable-reference") {
+    // sort nodes by location
+    nodes.sort((a, b) => {
+      if (a.location.range.start.line < b.location.range.start.line) {
+        return -1;
+      } else if (a.location.range.start.line > b.location.range.start.line) {
+        return 1;
+      } else {
+        if (
+          a.location.range.start.character < b.location.range.start.character
+        ) {
+          return -1;
+        } else if (
+          a.location.range.start.character > b.location.range.start.character
+        ) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
+  }
+
+  let indexMapper = new TwoDimensionIndexMapper(rawCodeText);
+  let spanCoordinates = [];
+  for (let i = 0; i < nodes.length; i++) {
+    let currentNode = nodes[i];
+    let startLine, startCharacter, endLine, endCharacter;
+
+    if (type == "function-reference") {
+      startLine =
+        currentNode.location.range.start.line - codeStartLocation.line;
+      startCharacter =
+        currentNode.location.range.start.character -
+        codeStartLocation.character;
+
+      endLine = currentNode.location.range.end.line - codeStartLocation.line;
+      endCharacter =
+        currentNode.location.range.end.character - codeStartLocation.character;
+    } else if (type == "variable-definition") {
+      startLine =
+        currentNode.symbol.selectionRange.start.line - codeStartLocation.line;
+      startCharacter =
+        currentNode.symbol.selectionRange.start.character -
+        codeStartLocation.character;
+
+      endLine =
+        currentNode.symbol.selectionRange.end.line - codeStartLocation.line;
+      endCharacter =
+        currentNode.symbol.selectionRange.end.character -
+        codeStartLocation.character;
+    } else if (type == "variable-reference") {
+      startLine =
+        currentNode.location.range.start.line - codeStartLocation.line;
+      startCharacter =
+        currentNode.location.range.start.character -
+        codeStartLocation.character;
+
+      endLine = currentNode.location.range.end.line - codeStartLocation.line;
+      endCharacter =
+        currentNode.location.range.end.character - codeStartLocation.character;
+    }
+
+    let start = indexMapper.map(startLine, startCharacter);
+    let end = indexMapper.map(endLine, endCharacter);
+    if (type == "function-reference") {
+      spanCoordinates.push({
+        type: "opening",
+        index: start,
+        tag: `<span class="hljs-title function_ functionReference" function-definition-hash="${currentNode.functionDefinitionHash}" function-reference-hash="${currentNode.hashString}">`,
+      });
+    } else if (type == "variable-definition") {
+      let style = variableDefinitionHashToStyle[currentNode.hashString];
+      if (style) {
+        spanCoordinates.push({
+          type: "opening",
+          index: start,
+          tag: `<span class="variableDefinition highlight" variable-definition-hash="${currentNode.hashString}" style="background-color: ${style.backgroundColor}; color: ${style.textColor};">`,
+        });
+      } else {
+        spanCoordinates.push({
+          type: "opening",
+          index: start,
+          tag: `<span class="variableDefinition" variable-definition-hash="${currentNode.hashString}">`,
+        });
+      }
+    } else if (type == "variable-reference") {
+      let style =
+        variableDefinitionHashToStyle[currentNode.variableDefinitionHash];
+      if (style) {
+        spanCoordinates.push({
+          type: "opening",
+          index: start,
+          tag: `<span class="variableReference highlight" variable-definition-hash="${currentNode.variableDefinitionHash}" style="background-color: ${style.backgroundColor}; color: ${style.textColor};">`,
+        });
+      } else {
+        spanCoordinates.push({
+          type: "opening",
+          index: start,
+          tag: `<span class="variableReference" variable-definition-hash=${currentNode.variableDefinitionHash}>`,
+        });
+      }
+    }
+    spanCoordinates.push({
+      type: "closing",
+      index: end,
+      tag: "</span>",
+    });
+  }
+  return spanCoordinates;
+}
+
+function shiftCanvasTowardsHtmlBox(htmlBox, anchor = { x: 300, y: 300 }) {
+  // we will shift the canvas so that the functionMetadataBox is at the anchor
+  // we will shift the canvas and change the scale to SCALE_TARGET
+  const SCALE_TARGET = 0.5;
+
+  let functionMetadataBoxPosition = getDocumentRelativePosition(
+    htmlBox.htmlElement()
+  );
+
+  // box canvas pixel
+  let bcpx = {
+    x: functionMetadataBoxPosition.left,
+    y: functionMetadataBoxPosition.top,
+  };
+
+  // canvas real pixel
+  let crpx = {
+    x: canvasTranslate().x,
+    y: canvasTranslate().y,
+  };
+
+  // box real pixel
+  let brpx = {
+    x: bcpx.x * SCALE_TARGET + crpx.x,
+    y: bcpx.y * SCALE_TARGET + crpx.y,
+  };
+
+  // real gap pixel
+  let rGapx = brpx.x - crpx.x;
+  let rGapy = brpx.y - crpx.y;
+
+  // new canvas real pixel
+  let nCrpx = { x: anchor.x - rGapx, y: anchor.y - rGapy };
+
+  const canvas = document.querySelector(".canvas");
+  canvas.style.transition = "transform 0.3s ease"; // Adjust duration and easing as needed
+  canvas.style.transform = `translate(${nCrpx.x}px, ${nCrpx.y}px) scale(${SCALE_TARGET})`;
+
+  // Add an event listener to remove the transition property after the animation is done
+  function removeTransition() {
+    canvas.style.transition = ""; // Remove the transition property
+    canvas.removeEventListener("transitionend", removeTransition); // Remove the event listener
+  }
+
+  // Add an event listener to detect the end of the transition
+  canvas.addEventListener("transitionend", removeTransition);
+}
+
+export function rootURL() {
+  return `http://localhost:${window.location.port}`;
+}
+
+export function canvasTranslate() {
+  let canvasElement = document.querySelector(".canvas");
+  var transformStyle = canvasElement.style.transform;
+  var match = transformStyle.match(/translate\(([^,]+),([^)]+)\)/);
+
+  if (match) {
+    var translateX = parseFloat(match[1]);
+    var translateY = parseFloat(match[2]);
+    return { x: translateX, y: translateY };
+  } else {
+    return { x: 0, y: 0 };
+  }
+}
+
+export function canvasScale() {
+  const canvasEl = document.querySelector(".canvas");
+
+  const styleAttribute = canvasEl.getAttribute("style");
+
+  if (!styleAttribute) {
+    console.error("styleAttribute is null");
+    return null;
+  }
+
+  const scaleMatch = styleAttribute.match(/scale\(([^)]+)\)/);
+
+  if (scaleMatch) {
+    return parseFloat(scaleMatch[1]);
+  } else {
+    console.error("scaleMatch is null");
     return null;
   }
 }
@@ -835,152 +981,6 @@ function generateUUID() {
     const v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
-}
-
-// TODO: Clean the mess with the if statement bro wtf lol
-function constructSpanCoordinatesFromNodes(
-  type,
-  rawCodeText,
-  nodes,
-  variableDefinitionHashToStyle,
-  codeStartLocation
-) {
-  if (type == "variable-definition") {
-    nodes.sort((a, b) => {
-      if (
-        a.symbol.selectionRange.start.line < b.symbol.selectionRange.start.line
-      ) {
-        return -1;
-      } else if (
-        a.symbol.selectionRange.start.line > b.symbol.selectionRange.start.line
-      ) {
-        return 1;
-      } else {
-        if (
-          a.symbol.selectionRange.start.character <
-          b.symbol.selectionRange.start.character
-        ) {
-          return -1;
-        } else if (
-          a.symbol.selectionRange.start.character >
-          b.symbol.selectionRange.start.character
-        ) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    });
-  } else if (type == "function-reference" || type == "variable-reference") {
-    // sort nodes by location
-    nodes.sort((a, b) => {
-      if (a.location.range.start.line < b.location.range.start.line) {
-        return -1;
-      } else if (a.location.range.start.line > b.location.range.start.line) {
-        return 1;
-      } else {
-        if (
-          a.location.range.start.character < b.location.range.start.character
-        ) {
-          return -1;
-        } else if (
-          a.location.range.start.character > b.location.range.start.character
-        ) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    });
-  }
-
-  let indexMapper = new TwoDimensionIndexMapper(rawCodeText);
-  let spanCoordinates = [];
-  for (let i = 0; i < nodes.length; i++) {
-    let currentNode = nodes[i];
-    let startLine, startCharacter, endLine, endCharacter;
-
-    if (type == "function-reference") {
-      startLine =
-        currentNode.location.range.start.line - codeStartLocation.line;
-      startCharacter =
-        currentNode.location.range.start.character -
-        codeStartLocation.character;
-
-      endLine = currentNode.location.range.end.line - codeStartLocation.line;
-      endCharacter =
-        currentNode.location.range.end.character - codeStartLocation.character;
-    } else if (type == "variable-definition") {
-      startLine =
-        currentNode.symbol.selectionRange.start.line - codeStartLocation.line;
-      startCharacter =
-        currentNode.symbol.selectionRange.start.character -
-        codeStartLocation.character;
-
-      endLine =
-        currentNode.symbol.selectionRange.end.line - codeStartLocation.line;
-      endCharacter =
-        currentNode.symbol.selectionRange.end.character -
-        codeStartLocation.character;
-    } else if (type == "variable-reference") {
-      startLine =
-        currentNode.location.range.start.line - codeStartLocation.line;
-      startCharacter =
-        currentNode.location.range.start.character -
-        codeStartLocation.character;
-
-      endLine = currentNode.location.range.end.line - codeStartLocation.line;
-      endCharacter =
-        currentNode.location.range.end.character - codeStartLocation.character;
-    }
-
-    let start = indexMapper.map(startLine, startCharacter);
-    let end = indexMapper.map(endLine, endCharacter);
-    if (type == "function-reference") {
-      spanCoordinates.push({
-        type: "opening",
-        index: start,
-        tag: `<span class="hljs-title function_ functionReference" function-definition-hash="${currentNode.functionDefinitionHash}" function-reference-hash="${currentNode.hashString}">`,
-      });
-    } else if (type == "variable-definition") {
-      let style = variableDefinitionHashToStyle[currentNode.hashString];
-      if (style) {
-        spanCoordinates.push({
-          type: "opening",
-          index: start,
-          tag: `<span class="variableDefinition highlight" variable-definition-hash="${currentNode.hashString}" style="background-color: ${style.backgroundColor}; color: ${style.textColor};">`,
-        });
-      } else {
-        spanCoordinates.push({
-          type: "opening",
-          index: start,
-          tag: `<span class="variableDefinition" variable-definition-hash="${currentNode.hashString}">`,
-        });
-      }
-    } else if (type == "variable-reference") {
-      let style =
-        variableDefinitionHashToStyle[currentNode.variableDefinitionHash];
-      if (style) {
-        spanCoordinates.push({
-          type: "opening",
-          index: start,
-          tag: `<span class="variableReference highlight" variable-definition-hash="${currentNode.variableDefinitionHash}" style="background-color: ${style.backgroundColor}; color: ${style.textColor};">`,
-        });
-      } else {
-        spanCoordinates.push({
-          type: "opening",
-          index: start,
-          tag: `<span class="variableReference" variable-definition-hash=${currentNode.variableDefinitionHash}>`,
-        });
-      }
-    }
-    spanCoordinates.push({
-      type: "closing",
-      index: end,
-      tag: "</span>",
-    });
-  }
-  return spanCoordinates;
 }
 
 function extractChildrenRange(keyFunctionChildrenList) {
