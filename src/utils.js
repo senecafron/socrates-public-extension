@@ -426,6 +426,7 @@ function addArrowTipDefinitionToSvg(markerWidth, markerHeight, svg) {
 export function injectDraggingBehaviour(
   document,
   draggableBoxHtmlElement,
+  /** @type {HTMLBoxGraph} */
   htmlBoxGraph
 ) {
   if (draggableBoxHtmlElement.onmousedown !== null) {
@@ -553,6 +554,7 @@ export function injectDraggingBehaviour(
     function moveClickedBox(newLeft, newTop) {
       draggableBoxHtmlElement.style.left = newLeft + "px";
       draggableBoxHtmlElement.style.top = newTop + "px";
+      /** @type {HTMLBoxGraph} */
       htmlBoxGraph.recomputeSVGArrowConnections(
         /*recentlyMovedBoxId=*/ draggableBoxHtmlElement.getAttribute("id")
       );
