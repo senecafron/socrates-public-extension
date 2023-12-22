@@ -1621,6 +1621,7 @@ class HTMLBox {
     this.id_ = generateUUID();
     this._isDrawn = false;
     this.document = document;
+    /** @type {HTMLBoxGraph} */
     this.htmlBoxGraph = htmlBoxGraph;
     this.trackableState = trackableState;
   }
